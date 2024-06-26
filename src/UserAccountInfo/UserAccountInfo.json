@@ -3,18 +3,16 @@
     "balance": 1000.00,
     "currency": "USD"
   },
-  "childAccounts": [
-    {
-      "name": "Child1",
+  "childAccounts": {
+    "Child1": {
       "balance": 100.00,
       "currency": "USD"
     },
-    {
-      "name": "Child2",
+    "Child2": {
       "balance": 150.00,
       "currency": "USD"
     }
-  ],
+  },
   "accountActivity": []
 }
 

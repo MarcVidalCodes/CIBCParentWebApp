@@ -3,7 +3,7 @@ import userAccountInfo from './UserAccountInfo.json';
 
 const useUserAccounts = () => {
   const [balance, setBalance] = useState(userAccountInfo.parentAccount.balance);
-  const [childAccounts, setChildAccounts] = useState(userAccountInfo.childAccounts);
+  const [childAccounts, setChildAccounts] = useState(Object.entries(userAccountInfo.childAccounts).map(([name, info]) => ({ name, ...info })));
   const [accountActivity, setAccountActivity] = useState(userAccountInfo.accountActivity);
 
   useEffect(() => {
@@ -36,7 +36,11 @@ const useUserAccounts = () => {
     });
   };
 
-  return { balance, childAccounts, accountActivity, setChildAccounts, updateBalance, updateChildAccountBalance };
+  const addAccountActivity = (activity) => {
+    setAccountActivity(prevActivity => [...prevActivity, activity]);
+  };
+
+  return { balance, childAccounts, accountActivity, setChildAccounts, updateBalance, updateChildAccountBalance, addAccountActivity };
 };
 
 export default useUserAccounts;

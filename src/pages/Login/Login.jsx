@@ -19,8 +19,8 @@ const Login = () => {
     <div className="login-container">
       <div className="left-box">
         <div className='wrapper'>
-        <img src={logo} alt="Company Logo" className="logo" />
           <form action ="">
+            <img src={logo} alt="Company Logo" className="logo" />
             <h1>{isRegister ? 'Register' : 'Login'}</h1>
             <h1 className="title">Parent Portal</h1>
             <div className="input-box">

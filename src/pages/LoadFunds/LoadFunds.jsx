@@ -3,9 +3,9 @@ import './LoadFunds.css';
 import useUserAccounts from '../../UserAccountInfo/UserAccounts';
 
 const LoadFunds = () => {
-  const { balance, childAccounts, accountActivity, setChildAccounts, updateBalance, updateChildAccountBalance } = useUserAccounts();
+  const { balance, childAccounts, accountActivity, setChildAccounts, updateBalance, addAccountActivity } = useUserAccounts();
   const [fromAccount, setFromAccount] = useState('-');
-  const [toAccount, setToAccount] = useState('-');
+  const [toAccount, setToAccount] = useState('Child1'); // Default to Child1
   const [recurringAllowance, setRecurringAllowance] = useState(false);
   const [allowanceFrequency, setAllowanceFrequency] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -40,8 +40,8 @@ const LoadFunds = () => {
     if (accountUpdated) {
       setChildAccounts(updatedChildAccounts);
       updateBalance(amountValue); // Corrected to subtract the amount from the parent account balance
-      updateChildAccountBalance(toAccount, amountValue);
       const newActivity = { user: toAccount, activity: 'Load Funds', amount: amountValue, currency: 'USD', date: new Date().toISOString().split('T')[0] };
+      addAccountActivity(newActivity);
       setMessage('Funds loaded successfully');
       console.log('Updated account activity:', [...accountActivity, newActivity]);
       console.log('Funds amount loaded:', amountValue); // Added console log for funds amount loaded
@@ -55,7 +55,7 @@ const LoadFunds = () => {
 
     // Clear the form
     setFromAccount('-');
-    setToAccount('-');
+    setToAccount('Child1'); // Reset to Child1
     setRecurringAllowance(false);
     setAllowanceFrequency('');
     setStartDate('');
@@ -95,9 +95,8 @@ const LoadFunds = () => {
             onChange={(e) => setToAccount(e.target.value)}
             required
           >
-            <option value="-">-</option>
-            {childAccounts.map((account, index) => (
-              <option key={index} value={account.name}>{account.name} Account</option>
+            {childAccounts.map(account => (
+              <option key={account.name} value={account.name}>{account.name} Account</option>
             ))}
           </select>
         </div>
