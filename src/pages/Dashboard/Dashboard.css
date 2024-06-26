@@ -1,41 +1,90 @@
-/* Dashboard.css */
-
 .dashboard-container {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Full height of viewport */
+    height: 100vh;
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    padding: 20px;
+    overflow: hidden;
   }
   
   .dashboard-row {
     display: flex;
-    flex: 1; /* Each row takes equal vertical space */
+    flex: 1;
+    margin-bottom: 20px;
   }
   
   .dashboard-column {
-    flex: 1; /* Each column takes equal horizontal space */
+    flex: 1;
     display: flex;
     flex-direction: column;
+    margin-right: 20px;
   }
   
   .box {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 10px;
     padding: 20px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .box-title {
+    position: relative;
+    font-size: 1.5em;
+    margin-bottom: 5px; /* Reduced space underneath the title */
+    text-align: left; /* Align title to the left */
+    width: 100%; /* Ensure title takes full width */
+    padding-left: 20px; /* Shift title to the right */
   }
   
   .double-height {
-    flex: 2; /* Takes 2/3 of the vertical space */
+    flex: 2;
   }
   
   .single-height {
-    flex: 1; /* Takes 1/3 of the vertical space */
+    flex: 1;
   }
   
   .full-width {
-    flex: 2; /* Takes full width of both rows */
+    flex: 2;
+    margin-right: 0;
   }
   
+  p, ul {
+    font-size: 1em;
+    margin: 0;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 5px;
+  }
+
+  .scrollable-box {
+    overflow-y: auto;
+    max-height: 70%; /* Reduced max-height to make the box smaller */
+  }
+
+  .activity-box {
+    width: auto; /* Changed from 100% to auto */
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between; /* Align content to the left and right */
+  }

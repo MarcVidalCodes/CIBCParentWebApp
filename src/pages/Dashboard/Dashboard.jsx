@@ -1,43 +1,85 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 
 const Dashboard = () => {
+  const [balance, setBalance] = useState(0);
+  const [childAccounts, setChildAccounts] = useState([]);
+  const [aiInsights, setAiInsights] = useState('');
+  const [accountActivity, setAccountActivity] = useState([]);
+
+  useEffect(() => {
+    // Fetch balance data
+    setBalance(1000.00);
+
+    // Fetch child accounts summary
+    setChildAccounts([
+      { name: 'Child 1', balance: 500.00 },
+      { name: 'Child 2', balance: 300.00 },
+      { name: 'Child 3', balance: 200.00 }
+    ]);
+
+    // Fetch AI insights
+    setAiInsights('AI analysis of spending patterns.');
+
+    // Fetch account activity
+    const activities = [
+      { user: 'Child 1', date: '2024-06-30', amount: 50.00 },
+      { user: 'Child 2', date: '2024-06-29', amount: 20.00 },
+      { user: 'Child 2', date: '2024-06-29', amount: 20.00 },
+      { user: 'Child 2', date: '2024-06-29', amount: 20.00 },
+      { user: 'Child 2', date: '2024-06-29', amount: 20.00 },
+      { user: 'Child 3', date: '2024-06-28', amount: 30.00 }
+    ];
+
+    // Update child account balances based on activities
+    const updatedChildAccounts = [...childAccounts];
+    activities.forEach(activity => {
+      const account = updatedChildAccounts.find(acc => acc.name === activity.user);
+      if (account) {
+        account.balance -= activity.amount;
+      }
+    });
+
+    setChildAccounts(updatedChildAccounts);
+    setAccountActivity(activities);
+  }, []);
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-row">
         <div className="dashboard-column">
+          <h3 className="box-title">Balance</h3>
           <div className="box double-height">
-            <h3>Balance</h3>
-            {/* Replace with actual balance data or component */}
-            <p>$1,000.00</p>
+            <p>${balance.toFixed(2)}</p>
           </div>
+          <h3 className="box-title">Quick Look at Child Accounts</h3>
           <div className="box double-height">
-            <h3>Quick Look at Child Accounts</h3>
-            {/* Replace with actual child accounts summary */}
             <ul>
-              <li>Child 1: $500.00</li>
-              <li>Child 2: $300.00</li>
-              <li>Child 3: $200.00</li>
+              {childAccounts.map((account, index) => (
+                <li key={index}>{account.name}: ${account.balance.toFixed(2)}</li>
+              ))}
             </ul>
           </div>
         </div>
         <div className="dashboard-column">
+          <h3 className="box-title">AI Insights</h3>
           <div className="box single-height">
-            <h3>AI Insights</h3>
-            {/* Replace with AI insights content */}
-            <p>AI analysis of spending patterns.</p>
+            <p>{aiInsights}</p>
           </div>
         </div>
       </div>
       <div className="dashboard-row">
-        <div className="box full-width">
-          <h3>Account Activity</h3>
-          {/* Replace with actual account activity list */}
-          <ul>
-            <li>User: Child 1 | Date: 2024-06-30 | Amount: $50.00</li>
-            <li>User: Child 2 | Date: 2024-06-29 | Amount: $20.00</li>
-            <li>User: Child 3 | Date: 2024-06-28 | Amount: $30.00</li>
-          </ul>
+        <div className="dashboard-column full-width">
+          <h3 className="box-title">Account Activity</h3>
+          <div className="box scrollable-box">
+            <ul>
+              {accountActivity.map((activity, index) => (
+                <li key={index} className="activity-box">
+                  User: {activity.user} | Date: {activity.date} | Amount: ${activity.amount.toFixed(2)}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

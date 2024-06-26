@@ -1,6 +1,6 @@
 .load-funds-container {
     width: 100%;
-    max-width: 800px; /* Adjust max-width as needed */
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
   }
@@ -34,6 +34,11 @@
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    appearance: none;
+    background-color: #f9f9f9;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
   }
   
   .form-button {
@@ -66,4 +71,143 @@
     color: #666;
     margin-bottom: 10px;
   }
-  
+
+  .recurring-allowance-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .recurring-allowance-toggle {
+    position: relative;
+    width: 50px;
+    height: 25px;
+    background-color: #ccc;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .recurring-allowance-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s;
+  }
+
+  .recurring-allowance-toggle.active {
+    background-color: #901C44;
+  }
+
+  .recurring-allowance-toggle.active::after {
+    transform: translateX(25px);
+  }
+
+  .recurring-allowance-label {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .form-group.checkbox-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-group.checkbox-container input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .form-group.checkbox-container .checkbox-label {
+    font-size: 18px;
+    color: #333;
+  }
+
+  .form-input::placeholder {
+    font-size: 14px; 
+  }
+
+  .form-group.amount-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-group.amount-group .form-input {
+    height: auto; 
+    width: 60%; 
+  }
+
+  .form-group.payment-method-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-group.payment-method-group .form-select {
+    height: auto; 
+    width: 100%; 
+  }
+
+  .form-group.allowance-frequency-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-group.allowance-frequency-group .form-select {
+    height: auto; 
+    width: 100%; 
+  }
+
+  .form-group.start-date-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-group.start-date-group .form-input {
+    height: auto; 
+    width: 100%; 
+  }
+
+  .amount-input {
+    height: auto; 
+    width: 60%; 
+    -moz-appearance: textfield; 
+  }
+
+  .amount-input::-webkit-outer-spin-button,
+  .amount-input::-webkit-inner-spin-button {
+    -webkit-appearance: none; 
+    margin: 0;
+  }
+
+  .preset-amount-buttons {
+    display: flex;
+    gap: 10px;
+    width: 60%;
+  }
+
+  .preset-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #901C44;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: calc(60% / 3);
+  }
+
+  .preset-button:hover {
+    background-color: #AD2C5A;
+  }
