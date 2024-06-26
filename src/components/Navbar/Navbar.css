@@ -7,28 +7,29 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
+    align-items: center;
+    padding-top: 40px;
   }
   
   .logo-container {
-    margin-bottom: 20px; /* Adjust margin as needed */
+    margin-bottom: 20px;
   }
   
   .logo {
-    width: 250px; /* Adjust width and height as needed */
+    width: 250px;
     height: auto;
   }
   
   .navbar ul {
     list-style-type: none;
     padding: 0;
+    flex-grow: 1;
   }
   
   .navbar li {
-    margin-top: 20px; /* Adjust margin between menu items */
+    margin-top: 20px;
     padding: 10px;
-    text-align: center; /* Center text horizontally */
+    text-align: center;
   }
   
   .navbar li a {
@@ -43,3 +44,37 @@
     border-radius: 5px;
   }
   
+  .logout-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .logout-container:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+  
+  .logout-icon {
+    font-size: 24px;
+    color: #fff;
+  }
+  
+  .logout-text {
+    margin-left: 10px;
+    font-size: 18px;
+    color: #fff;
+  }
+
+  .money-mentor {
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+}
+
