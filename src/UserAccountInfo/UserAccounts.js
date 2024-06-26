@@ -7,14 +7,17 @@ const useUserAccounts = () => {
   const [accountActivity, setAccountActivity] = useState(userAccountInfo.accountActivity);
 
   useEffect(() => {
-    // Update child account balances based on activities
-    const updatedChildAccounts = childAccounts.map(account => {
-      const accountActivities = accountActivity.filter(activity => activity.user === account.name);
-      const totalSpent = accountActivities.reduce((sum, activity) => sum + activity.amount, 0);
-           return { ...account, balance: account.balance - totalSpent };
-    });
+    const updateChildBalances = () => {
+      const updatedChildAccounts = childAccounts.map(account => {
+        const accountActivities = accountActivity.filter(activity => activity.user === account.name);
+        const totalSpent = accountActivities.reduce((sum, activity) => sum + activity.amount, 0);
+        return { ...account, balance: account.balance - totalSpent };
+      });
 
-    setChildAccounts(updatedChildAccounts);
+      setChildAccounts(updatedChildAccounts);
+    };
+
+    updateChildBalances();
   }, [accountActivity]);
 
   const updateBalance = (amount) => {
@@ -22,11 +25,15 @@ const useUserAccounts = () => {
   };
 
   const updateChildAccountBalance = (accountName, amount) => {
-    setChildAccounts(prevChildAccounts => 
-      prevChildAccounts.map(account => 
-        account.name === accountName ? { ...account, balance: account.balance + amount } : account
-      )
-    );
+    setChildAccounts(prevChildAccounts => {
+      const updatedAccounts = prevChildAccounts.map(account => {
+        if (account.name === accountName) {
+          return { ...account, balance: account.balance + amount };
+        }
+        return account;
+      });
+      return updatedAccounts;
+    });
   };
 
   return { balance, childAccounts, accountActivity, setChildAccounts, updateBalance, updateChildAccountBalance };

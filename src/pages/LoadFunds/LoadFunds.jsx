@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './LoadFunds.css';
-import useUserAccounts from '../../UserAccountInfo/UserAccounts'
+import useUserAccounts from '../../UserAccountInfo/UserAccounts';
+
 const LoadFunds = () => {
   const { balance, childAccounts, accountActivity, setChildAccounts, updateBalance, updateChildAccountBalance } = useUserAccounts();
   const [fromAccount, setFromAccount] = useState('-');
@@ -17,7 +18,7 @@ const LoadFunds = () => {
     childAccounts.forEach(account => {
       console.log(`${account.name} account balance:`, account.balance);
     });
-  }, []);
+  }, [balance, childAccounts]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,11 +39,12 @@ const LoadFunds = () => {
 
     if (accountUpdated) {
       setChildAccounts(updatedChildAccounts);
-      updateBalance(-amountValue);
+      updateBalance(amountValue); // Corrected to subtract the amount from the parent account balance
       updateChildAccountBalance(toAccount, amountValue);
       const newActivity = { user: toAccount, activity: 'Load Funds', amount: amountValue, currency: 'USD', date: new Date().toISOString().split('T')[0] };
       setMessage('Funds loaded successfully');
       console.log('Updated account activity:', [...accountActivity, newActivity]);
+      console.log('Funds amount loaded:', amountValue); // Added console log for funds amount loaded
     } else {
       setMessage('Failed to load funds');
     }
@@ -182,4 +184,3 @@ const LoadFunds = () => {
 };
 
 export default LoadFunds;
-
