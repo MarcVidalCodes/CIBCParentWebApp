@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login/Login';
+import Accounts from './pages/Accounts/Accounts';
+import LoadFunds from './pages/LoadFunds/LoadFunds';
+import ParentalControls from './pages/ParentalControls/ParentalControls';
+import Navbar from './components/Navbar/Navbar';
+import Dashboard from './pages/Dashboard/Dashboard';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='/accounts' element={<PageWithNavbar><Accounts /></PageWithNavbar>} />
+        <Route path='/load-funds' element={<PageWithNavbar><LoadFunds /></PageWithNavbar>} />
+        <Route path='/dashboard' element={<PageWithNavbar><Dashboard /></PageWithNavbar>} />
+        <Route path='/parental-controls' element={<PageWithNavbar><ParentalControls /></PageWithNavbar>} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-export default App
+// Component to wrap pages with Navbar
+const PageWithNavbar = ({ children }) => {
+  return (
+    <div style={{ display: 'flex' }}>
+      <Navbar />
+      <div style={{ marginLeft: '25%', width: '75%' }}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+export default App;
