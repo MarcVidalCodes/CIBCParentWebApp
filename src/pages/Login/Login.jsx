@@ -3,6 +3,33 @@ import './Login.css';
 import { FaUser, FaLock } from "react-icons/fa";
 
 const Login = () => {
+
+
+  function handleLogin(event){
+    event.preventDefault();
+  
+    fetch('/api/testserver')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(text => {
+      try {
+        const jsonData = JSON.parse(text); // Attempt to parse JSON
+        console.log(jsonData);
+        window.alert("API routing worked!!!1");
+      } catch (error) {
+        console.error("Failed to parse JSON:", error);
+        // Handle the case where response is not JSON
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   return (
     <div className="login-container">
       <div className="left-box">
@@ -28,7 +55,7 @@ const Login = () => {
               <a href="#">Forgot password?</a>
             </div>
 
-            <button type="submit">Login</button>
+            <button type="submit" onClick={handleLogin}>Login</button>
 
             <div className="register-link">
               <p>Don't have an account? <a href="#">Register</a></p>
