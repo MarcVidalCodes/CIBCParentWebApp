@@ -39,7 +39,7 @@ const LoadFunds = () => {
 
     if (accountUpdated) {
       setChildAccounts(updatedChildAccounts);
-      updateBalance(amountValue); // Corrected to subtract the amount from the parent account balance
+      updateBalance(-amountValue); // Corrected to subtract the amount from the parent account balance
       const newActivity = { user: toAccount, activity: 'Load Funds', amount: amountValue, currency: 'USD', date: new Date().toISOString().split('T')[0] };
       addAccountActivity(newActivity);
       setMessage('Funds loaded successfully');

@@ -13,6 +13,21 @@
       "currency": "USD"
     }
   },
-  "accountActivity": []
+  "accountActivity": [
+    {
+      "user": "Child1",
+      "activity": "Load Funds",
+      "amount": 50.00,
+      "currency": "USD",
+      "date": "2022-01-01"
+    },
+    {
+      "user": "Child2",
+      "activity": "Load Funds",
+      "amount": 75.00,
+      "currency": "USD",
+      "date": "2022-01-02"
+    }
+  ]
 }
 

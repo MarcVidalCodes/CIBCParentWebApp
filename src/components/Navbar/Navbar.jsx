@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { CiLogout } from "react-icons/ci";
 import './Navbar.css';
 import logo from '../../assets/cibclogo1.png'; // Adjust the path based on your project structure
@@ -12,10 +12,10 @@ const Navbar = ({ onLogout }) => {
         <div className="money-mentor">Parent Portal</div>
       </div>
       <ul>
-        <li><Link to="/dashboard">Dashboard</Link></li>
-        <li><Link to="/ai-insights">AI Insights</Link></li>
-        <li><Link to="/load-funds">Load Funds</Link></li>
-        <li><Link to="/parental-controls">Parental Controls</Link></li>
+        <li><NavLink to="/dashboard">Dashboard</NavLink></li>
+        <li><NavLink to="/ai-insights">AI Insights</NavLink></li>
+        <li><NavLink to="/load-funds">Load Funds</NavLink></li>
+        <li><NavLink to="/parental-controls">Parental Controls</NavLink></li>
       </ul>
       <div className="logout-container" onClick={onLogout}>
         <CiLogout className="logout-icon" />
@@ -26,3 +26,4 @@ const Navbar = ({ onLogout }) => {
 };
 
 export default Navbar;
+

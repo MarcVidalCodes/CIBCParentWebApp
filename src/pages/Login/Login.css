@@ -8,6 +8,9 @@
   flex: 40%; /* Adjusted to 40% */
   background-color: #D9D9D9;
   padding: 20px;
+  display: flex;
+  justify-content: center; /* Centers the content horizontally */
+  align-items: center; /* Centers the content vertically */
 }
 
 .right-box {
@@ -47,11 +50,11 @@ body{
 .wrapper h1{
   font-size: 36px;
   text-align: center;
-  color: #fff; /* Changed to white */
+  color: #000; /* Changed to black */
 }
 
 .wrapper .tittle{
-  color: #fff; /* Changed to white */
+  color: #000; /* Changed to black */
 }
 
 .wrapper .input-box {

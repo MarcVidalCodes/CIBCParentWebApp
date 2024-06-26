@@ -24,12 +24,14 @@
     list-style-type: none;
     padding: 0;
     flex-grow: 1;
+    width: 100%;
   }
   
   .navbar li {
     margin-top: 20px;
     padding: 10px;
     text-align: center;
+    width: 100%;
   }
   
   .navbar li a {
@@ -37,9 +39,18 @@
     text-decoration: none;
     color: #fff;
     font-size: 18px;
+    width: 100%;
+    padding: 10px 0;
   }
   
-  .navbar li a:hover {
+  .navbar li a:hover,
+  .navbar li a.active,
+  .navbar li a:visited {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+  }
+
+  .navbar li a.active {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
   }
@@ -60,13 +71,13 @@
 }
   
   .logout-icon {
-    font-size: 24px;
+    font-size: 20px; /* Reduced font size */
     color: #fff;
   }
   
   .logout-text {
     margin-left: 10px;
-    font-size: 18px;
+    font-size: 14px; /* Reduced font size */
     color: #fff;
   }
 
@@ -76,5 +87,32 @@
     font-weight: bold;
     margin-top: 10px;
     text-align: center;
-}
+  }
 
+  @media (min-width: 768px) {
+    .navbar li a {
+      font-size: 20px;
+    }
+
+    .logout-text {
+      font-size: 16px; /* Reduced font size */
+    }
+
+    .money-mentor {
+      font-size: 28px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .navbar li a {
+      font-size: 22px;
+    }
+
+    .logout-text {
+      font-size: 18px; /* Reduced font size */
+    }
+
+    .money-mentor {
+      font-size: 30px;
+    }
+  }
