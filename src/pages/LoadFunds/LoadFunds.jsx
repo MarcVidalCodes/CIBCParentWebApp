@@ -6,10 +6,11 @@ const LoadFunds = () => {
   const [toAccount, setToAccount] = useState('children'); // Defaulting to 'children'
   const [recurringAllowance, setRecurringAllowance] = useState(false);
   const [allowanceFrequency, setAllowanceFrequency] = useState('');
+  const [startDate, setStartDate] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted with:', { fromAccount, toAccount, recurringAllowance, allowanceFrequency });
+    console.log('Form submitted with:', { fromAccount, toAccount, recurringAllowance, allowanceFrequency, startDate });
     // Perform actions with form data here
   };
 
@@ -56,18 +57,32 @@ const LoadFunds = () => {
         </div>
 
         {recurringAllowance && (
-          <div className="date-picker-container">
+          <>
             <label htmlFor="allowance-frequency" className="form-label">Allowance Frequency</label>
-            <input
-              type="date"
+            <select
               id="allowance-frequency"
               name="allowance-frequency"
-              className="form-input"
+              className="form-select"
               value={allowanceFrequency}
               onChange={(e) => setAllowanceFrequency(e.target.value)}
               required
+            >
+              <option value="">Select frequency...</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+
+            <label htmlFor="start-date" className="form-label">Starting on</label>
+            <input
+              type="date"
+              id="start-date"
+              name="start-date"
+              className="form-input"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              required
             />
-          </div>
+          </>
         )}
 
         <label htmlFor="amount" className="form-label">Amount</label>

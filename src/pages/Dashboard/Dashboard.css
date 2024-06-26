@@ -1,0 +1,41 @@
+/* Dashboard.css */
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of viewport */
+  }
+  
+  .dashboard-row {
+    display: flex;
+    flex: 1; /* Each row takes equal vertical space */
+  }
+  
+  .dashboard-column {
+    flex: 1; /* Each column takes equal horizontal space */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+  }
+  
+  .double-height {
+    flex: 2; /* Takes 2/3 of the vertical space */
+  }
+  
+  .single-height {
+    flex: 1; /* Takes 1/3 of the vertical space */
+  }
+  
+  .full-width {
+    flex: 2; /* Takes full width of both rows */
+  }
+  
