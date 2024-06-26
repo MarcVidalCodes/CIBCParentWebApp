@@ -1,6 +1,6 @@
 import React from 'react';
 import './Dashboard.css';
-import useUserAccounts from '../../UserAccounts';
+import useUserAccounts from '../../UserAccountInfo/UserAccounts';
 
 const Dashboard = () => {
   const { balance, childAccounts, accountActivity } = useUserAccounts();

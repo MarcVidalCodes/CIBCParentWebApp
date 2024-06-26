@@ -1,21 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoadFunds.css';
-
+import useUserAccounts from '../../UserAccountInfo/UserAccounts'
 const LoadFunds = () => {
-  const [fromAccount, setFromAccount] = useState('parent');
-  const [toAccount, setToAccount] = useState('children');
+  const { balance, childAccounts, accountActivity, setChildAccounts, updateBalance, updateChildAccountBalance } = useUserAccounts();
+  const [fromAccount, setFromAccount] = useState('-');
+  const [toAccount, setToAccount] = useState('-');
   const [recurringAllowance, setRecurringAllowance] = useState(false);
   const [allowanceFrequency, setAllowanceFrequency] = useState('');
   const [startDate, setStartDate] = useState('');
   const [amount, setAmount] = useState('$0.00');
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    console.log('Current balances:');
+    console.log('Parent account balance:', balance);
+    childAccounts.forEach(account => {
+      console.log(`${account.name} account balance:`, account.balance);
+    });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (parseFloat(amount.replace('$', '')) < 0) {
-      alert('Please enter valid funds');
+    const amountValue = parseFloat(amount.replace('$', ''));
+    if (amountValue <= 0 || toAccount === '-') {
+      setMessage('Please fill fields');
       return;
     }
+
+    let accountUpdated = false;
+    const updatedChildAccounts = childAccounts.map(account => {
+      if (account.name === toAccount) {
+        accountUpdated = true;
+        return { ...account, balance: account.balance + amountValue };
+      }
+      return account;
+    });
+
+    if (accountUpdated) {
+      setChildAccounts(updatedChildAccounts);
+      updateBalance(-amountValue);
+      updateChildAccountBalance(toAccount, amountValue);
+      const newActivity = { user: toAccount, activity: 'Load Funds', amount: amountValue, currency: 'USD', date: new Date().toISOString().split('T')[0] };
+      setMessage('Funds loaded successfully');
+      console.log('Updated account activity:', [...accountActivity, newActivity]);
+    } else {
+      setMessage('Failed to load funds');
+    }
+
     console.log('Form submitted with:', { fromAccount, toAccount, recurringAllowance, allowanceFrequency, startDate, amount });
+    console.log('Updated child accounts:', updatedChildAccounts);
+    console.log('Updated parent balance:', balance - amountValue);
+
+    // Clear the form
+    setFromAccount('-');
+    setToAccount('-');
+    setRecurringAllowance(false);
+    setAllowanceFrequency('');
+    setStartDate('');
+    setAmount('$0.00');
   };
 
   const handlePresetAmount = (presetAmount) => {
@@ -36,6 +78,7 @@ const LoadFunds = () => {
             onChange={(e) => setFromAccount(e.target.value)}
             required
           >
+            <option value="-">-</option>
             <option value="parent">Parent Account</option>
           </select>
         </div>
@@ -50,7 +93,10 @@ const LoadFunds = () => {
             onChange={(e) => setToAccount(e.target.value)}
             required
           >
-            <option value="children">Children Account</option>
+            <option value="-">-</option>
+            {childAccounts.map((account, index) => (
+              <option key={index} value={account.name}>{account.name} Account</option>
+            ))}
           </select>
         </div>
 
@@ -122,6 +168,7 @@ const LoadFunds = () => {
         <div className="form-group">
           <label htmlFor="payment-method" className="form-label">Payment Method</label>
           <select id="payment-method" name="payment-method" className="form-select" required>
+            <option value="-">-</option>
             <option value="credit-card">Credit Card</option>
             <option value="debit-card">Debit Card</option>
           </select>
@@ -129,6 +176,7 @@ const LoadFunds = () => {
 
         <button type="submit" className="form-button">Load Funds</button>
       </form>
+      {message && <p className="message">{message}</p>}
     </div>
   );
 };

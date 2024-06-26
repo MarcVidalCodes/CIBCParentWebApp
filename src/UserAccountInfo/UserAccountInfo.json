@@ -1,0 +1,34 @@
+{
+  "parentAccount": {
+    "balance": 1000.00,
+    "currency": "USD"
+  },
+  "childAccounts": [
+    {
+      "name": "Child1",
+      "balance": 100.00,
+      "currency": "USD"
+    },
+    {
+      "name": "Child2",
+      "balance": 150.00,
+      "currency": "USD"
+    }
+  ],
+  "accountActivity": [
+    {
+      "user": "Child1",
+      "activity": "Purchase",
+      "amount": 20.00,
+      "currency": "USD",
+      "date": "2023-01-01"
+    },
+    {
+      "user": "Child2",
+      "activity": "Purchase",
+      "amount": 30.00,
+      "currency": "USD",
+      "date": "2023-01-02"
+    }
+  ]
+}
