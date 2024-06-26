@@ -3,39 +3,39 @@ import './ParentalControls.css';
 
 const ParentalControls = () => {
   return (
-    <div className="parental-controls-container">
+    <div>
       <h2 className="parental-controls-title">Parental Controls</h2>
 
-      <div className="parental-controls-section">
+      <div>
         <h3 className="section-title">Approve Transactions</h3>
         <label className="switch">
           <input type="checkbox" />
-          <span className="slider"></span>
+          <span className="slider round"></span>
         </label>
       </div>
 
-      <div className="parental-controls-section">
+      <div>
         <h3 className="section-title">Monitor Spending</h3>
         <label className="switch">
           <input type="checkbox" />
-          <span className="slider"></span>
+          <span className="slider round"></span>
         </label>
       </div>
 
-      <div className="parental-controls-section">
+      <div>
         <h3 className="section-title">Spending Controls</h3>
-        <div>
+        <div className="input-group">
           <label>
             Set Limits:
-            <input type="number" min="0" step="1" />
+            <input type="number" min="0" step="1" className="input-field" />
           </label>
         </div>
-        <div>
+        <div className="input-group">
           <label>
             Freeze/Unfreeze Card:
             <label className="switch">
               <input type="checkbox" />
-              <span className="slider"></span>
+              <span className="slider round"></span>
             </label>
           </label>
         </div>

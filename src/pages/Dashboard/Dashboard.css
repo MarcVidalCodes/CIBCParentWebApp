@@ -13,6 +13,7 @@
     display: flex;
     flex: 1;
     margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
   }
   
   .dashboard-column {
@@ -20,6 +21,7 @@
     display: flex;
     flex-direction: column;
     margin-right: 20px;
+    min-width: 300px; /* Ensure columns don't get too narrow */
   }
   
   .box {
@@ -34,6 +36,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
+    min-width: 280px; /* Ensure boxes don't get too narrow */
   }
   
   .box-title {
@@ -74,7 +77,7 @@
 
   .scrollable-box {
     overflow-y: auto;
-    max-height: 70%; /* Reduced max-height to make the box smaller */
+    max-height: 250px; /* Reduced max-height to make the box smaller */
   }
 
   .activity-box {
@@ -87,4 +90,41 @@
     box-sizing: border-box;
     display: flex;
     justify-content: space-between; /* Align content to the left and right */
+  }
+
+  @media (max-width: 1024px) {
+    .dashboard-row {
+      flex-direction: column; /* Stack rows vertically on smaller screens */
+    }
+
+    .dashboard-column {
+      margin-right: 0; /* Remove right margin on smaller screens */
+      margin-bottom: 20px; /* Add bottom margin for spacing */
+    }
+
+    .box {
+      width: 100%; /* Ensure boxes take full width on smaller screens */
+    }
+  }
+
+  .child-account {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 20px;
+    background-color: #e9ecef;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    min-width: 280px; /* Ensure boxes don't get too narrow */
+  }
+
+  .child-account-title {
+    position: relative;
+    font-size: 1.2em;
+    margin-bottom: 5px; /* Reduced space underneath the title */
+    text-align: left; /* Align title to the left */
+    width: 100%; /* Ensure title takes full width */
+    padding-left: 20px; /* Shift title to the right */
   }

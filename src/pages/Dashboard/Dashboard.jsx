@@ -12,11 +12,12 @@ const Dashboard = () => {
     setBalance(1000.00);
 
     // Fetch child accounts summary
-    setChildAccounts([
+    const initialChildAccounts = [
       { name: 'Child 1', balance: 500.00 },
       { name: 'Child 2', balance: 300.00 },
       { name: 'Child 3', balance: 200.00 }
-    ]);
+    ];
+    setChildAccounts(initialChildAccounts);
 
     // Fetch AI insights
     setAiInsights('AI analysis of spending patterns.');
@@ -32,12 +33,10 @@ const Dashboard = () => {
     ];
 
     // Update child account balances based on activities
-    const updatedChildAccounts = [...childAccounts];
-    activities.forEach(activity => {
-      const account = updatedChildAccounts.find(acc => acc.name === activity.user);
-      if (account) {
-        account.balance -= activity.amount;
-      }
+    const updatedChildAccounts = initialChildAccounts.map(account => {
+      const accountActivities = activities.filter(activity => activity.user === account.name);
+      const totalSpent = accountActivities.reduce((sum, activity) => sum + activity.amount, 0);
+      return { ...account, balance: account.balance - totalSpent };
     });
 
     setChildAccounts(updatedChildAccounts);
