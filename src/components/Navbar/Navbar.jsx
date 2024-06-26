@@ -9,7 +9,7 @@ const Navbar = ({ onLogout }) => {
     <div className="navbar">
       <div className="logo-container">
         <img src={logo} alt="Company Logo" className="logo" />
-        <div className="money-mentor">Money Mentor</div>
+        <div className="money-mentor">Parent Portal</div>
       </div>
       <ul>
         <li><Link to="/dashboard">Dashboard</Link></li>

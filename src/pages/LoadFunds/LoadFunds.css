@@ -1,0 +1,69 @@
+.load-funds-container {
+    width: 100%;
+    max-width: 800px; /* Adjust max-width as needed */
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .load-funds-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .load-funds-instructions {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #666;
+  }
+  
+  .load-funds-form {
+    display: grid;
+    gap: 15px;
+  }
+  
+  .form-label {
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .form-select,
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #901C44;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .form-button:hover {
+    background-color: #AD2C5A;
+  }
+  
+  .additional-info {
+    margin-top: 30px;
+  }
+  
+  .additional-info-title {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .additional-info-text {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
