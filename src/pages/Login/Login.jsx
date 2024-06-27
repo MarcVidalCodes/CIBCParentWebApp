@@ -1,39 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { FaUser, FaLock } from "react-icons/fa";
-import { useState } from 'react';
 import logo from '../../assets/cibclogo2.png'; // Adjust the path based on your project structure
 
 const Login = () => {
+  const [isRegister, setIsRegister] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
-
-  function handleLogin(event){
+  function handleLogin(event) {
     event.preventDefault();
-  
-    fetch('http://localhost:3001/api/testserver', {
+
+    if (isRegister && password !== confirmPassword) {
+      window.alert('Passwords do not match');
+      return;
+    }
+
+    const url = isRegister ? 'http://localhost:3001/api/users/signup' : 'http://localhost:3001/api/users/signin';
+    const payload = isRegister ? { username, password, confirmPassword } : { username, password };
+
+    fetch(url, {
+      method: 'POST',
       headers: {
-        'Accept': 'application/json', // Specify that the client expects JSON
-      }
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(payload),
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        return response.json().then(err => { throw new Error(err.error); });
       }
-      return response.text();
+      return response.json();
     })
-    .then(text => {
-      try {
-        //const jsonData = JSON.parse(text); // Attempt to parse JSON
-        console.log(text);
-        window.alert("API routing worked!!!1");
-      } catch (error) {
-        console.error("Failed to parse JSON:", error);
-        // Handle the case where response is not JSON
+    .then(data => {
+      if (data.error) {
+        window.alert(data.error);
+      } else {
+        window.alert(isRegister ? 'Registration successful!' : 'Login successful!');
+        // Store user information in local storage
+        localStorage.setItem('userId', data._id);
+        navigate('/dashboard'); // Redirect to dashboard
       }
     })
     .catch((error) => {
       console.log(error);
+      window.alert(error.message);
     });
+  }
+
+  function handleRegisterClick(event) {
+    event.preventDefault();
+    setIsRegister(true);
+  }
+
+  function handleLoginClick(event) {
+    event.preventDefault();
+    setIsRegister(false);
   }
 
   return (
@@ -45,17 +71,17 @@ const Login = () => {
             <h1>{isRegister ? 'Register' : 'Login'}</h1>
             <h1 className="title">Parent Portal</h1>
             <div className="input-box">
-              <input type="text" placeholder='Username' required />
+              <input type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} required />
               <FaUser className='icon' />
             </div>
             <div className="input-box">
-              <input type="password" placeholder='Password' required />
+              <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} required />
               <FaLock className='icon'/>
             </div>
 
             {isRegister && (
               <div className="input-box">
-                <input type="password" placeholder='Confirm Password' required />
+                <input type="password" placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                 <FaLock className='icon'/>
               </div>
             )}
@@ -69,7 +95,7 @@ const Login = () => {
               )}
             </div>
 
-            <button type="submit" onClick={handleLogin}>Login</button>
+            <button type="submit" onClick={handleLogin}>{isRegister ? 'Register' : 'Login'}</button>
 
             <div className="register-link">
               <p>{isRegister ? 'Already have an account?' : "Don't have an account?"} <a href="#" onClick={isRegister ? handleLoginClick : handleRegisterClick}>{isRegister ? 'Login' : 'Register'}</a></p>
@@ -84,4 +110,4 @@ const Login = () => {
   );
 };
 
-export default Login
+export default Login;

@@ -1,9 +1,8 @@
 import React from 'react';
 import './Dashboard.css';
-import useUserAccounts from '../../UserAccountInfo/UserAccounts';
 
 const Dashboard = () => {
-  const { balance, childAccounts, accountActivity } = useUserAccounts();
+  const { balance, childAccounts, accountActivity } = {}; // Placeholder for removed useUserAccounts
 
   return (
     <div className="dashboard-container">
@@ -11,12 +10,12 @@ const Dashboard = () => {
         <div className="dashboard-column">
           <h3 className="box-title">Balance</h3>
           <div className="box double-height">
-            <p>${balance.toFixed(2)}</p>
+            <p>${balance?.toFixed(2)}</p>
           </div>
           <h3 className="box-title">Quick Look at Child Accounts</h3>
           <div className="box double-height">
             <ul>
-              {childAccounts.map((account, index) => (
+              {childAccounts?.map((account, index) => (
                 <li key={index}>{account.name}: ${account.balance.toFixed(2)}</li>
               ))}
             </ul>
@@ -34,7 +33,7 @@ const Dashboard = () => {
           <h3 className="box-title">Account Activity</h3>
           <div className="box scrollable-box">
             <ul>
-              {accountActivity.map((activity, index) => (
+              {accountActivity?.map((activity, index) => (
                 <li key={index} className="activity-box">
                   User: {activity.user} | Date: {activity.date} | Amount: ${activity.amount.toFixed(2)}
                 </li>

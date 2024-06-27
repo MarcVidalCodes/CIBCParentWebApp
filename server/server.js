@@ -45,10 +45,9 @@ const AccountSchema = new mongoose.Schema({
 const Accounts = mongoose.model('Accounts', AccountSchema);
 
 const UserSchema = new mongoose.Schema({
-    userId: {type: String, required: true},
-    accounts: {type: [AccountSchema], required: false},
     username: {type: String, required: true},
     password: {type: String, required: true},
+    accounts: {type: [AccountSchema], required: false},
     name: {type: String, required: false},
 
 });
@@ -94,11 +93,22 @@ app.get('/api/testServer', async (req, res) => {
 // Create User (Sign Up)
 app.post('/api/users/signup', async (req, res) => {
     try {
-        const newUser = new Users(req.body);
+        const { username, password, confirmPassword } = req.body;
+        if (password !== confirmPassword) {
+            return res.status(400).json({ error: 'Passwords do not match' });
+        }
+
+        // Check if the user already exists
+        const existingUser = await Users.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
+
+        const newUser = new Users({ username, password });
         await newUser.save();
         res.status(201).json({ message: 'User created successfully', userId: newUser._id });
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error during signup:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -114,7 +124,7 @@ app.post('/api/users/signin', async (req, res) => {
             res.status(401).json({ error: 'Invalid credentials' });
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error during signin:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -156,7 +166,7 @@ app.delete('/api/users/:userId', async (req, res) => {
 // 2. -> Dashboard
 // -------------------------------------------
 
-// Link a new child account to the parent’s main account
+// Link a new child account to the parent's main account
 app.post('/api/parents/:parentId/children', async (req, res) => {
     try {
         const { parentId } = req.params;
