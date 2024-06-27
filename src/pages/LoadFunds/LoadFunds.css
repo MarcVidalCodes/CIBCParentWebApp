@@ -211,3 +211,11 @@
   .preset-button:hover {
     background-color: #AD2C5A;
   }
+
+  .form-group {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    margin-bottom: 20px;
+  }

@@ -6,78 +6,85 @@
   align-items: center;
   justify-content: center;
   padding: 40px;
-  background-color: #eef2f7;
+  background-color: #f5f7fa; /* Changed background color to a lighter shade */
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
 }
 
 .ai-insights-title {
   font-size: 48px;
-  color: #222;
+  color: #333; /* Darkened the title color for better contrast */
   margin-bottom: 30px;
   font-weight: 700;
 }
 
+.dropdown-container select {
+  font-size: 18px; /* Increased font size to make the dropdown box bigger */
+  padding: 10px; /* Added padding to make the dropdown box bigger */
+}
+
 .ai-insights-content {
-  font-size: 20px;
-  color: #444;
-  max-width: 900px;
-  text-align: center;
-  margin-bottom: 50px;
-  line-height: 1.6;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  gap: 20px;
+  margin-top: 50px;
 }
 
 .ai-insights-box {
   background-color: #fff;
   border-radius: 12px;
-  padding: 40px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  max-width: 1000px;
-  width: 100%;
+  width: 48%; /* Adjusted width to fit two boxes side by side */
   margin-top: 30px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-}
-
-.ai-insights-charts {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
 }
 
 .chart-placeholder {
-  width: 30%;
-  height: 300px; /* Increased height to make the chart 1 box taller */
-  background-color: #cfd8dc;
+  width: 100%;
+  height: 350px;
+  background-color: #e0e7ef; /* Changed background color to a lighter shade */
   display: flex;
   align-items: center;
   justify-content: center;
   color: #555;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-size: 18px;
+  font-size: 16px; /* Made the font size smaller */
   font-weight: 500;
+}
+
+.chart-placeholder img {
+  max-width: 300%; /* Made the pie chart larger */
+  max-height: 300%; /* Made the pie chart larger */
 }
 
 .ai-text-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 20px;
+  padding-left: 20px; /* Added padding to move the text container to the right */
+  padding-top: 20px; /* Added padding to move the text container lower */
 }
 
 .ai-text-title {
   font-size: 28px;
-  color: #222;
+  color: #333; /* Darkened the text title color for better contrast */
   margin-bottom: 15px;
   font-weight: 600;
 }
 
 .ai-text-content {
-  font-size: 18px;
+  font-size: 18px; /* Increased the font size */
   color: #444;
-  line-height: 1.6;
-  max-height: 150px; /* Added to make the AI explanation box shorter */
-  overflow: hidden; /* Added to hide overflow content */
+  line-height: 1.8; /* Increased line height for better readability */
+  max-height: 100%; /* Made the content fill the box */
+  overflow: auto; /* Changed overflow to auto to allow scrolling */
+  padding: 20px; /* Added padding to avoid text cutting off */
+  text-align: justify; /* Justified text to fill the box */
+  margin-left: -20px; /* Moved the text a little to the left to align with AI Explanation */
 }
+

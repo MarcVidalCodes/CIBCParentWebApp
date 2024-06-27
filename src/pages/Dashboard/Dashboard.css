@@ -97,6 +97,22 @@
     display: flex;
     justify-content: flex-start; /* Align content to the left */
   }
+  .activity-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .activity-table th, .activity-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .activity-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
 
   @media (max-width: 1024px) {
     .dashboard-row {
