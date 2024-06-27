@@ -49,6 +49,7 @@ const Tags = mongoose.model('Tags', TagSchema);
 const PurchaseSchema = new mongoose.Schema({
     prcId: {type: String, required: true},
     prcName: {type: String, required: false},
+    prcAmt: {type: Number, required:true},
     prcApproved: {type: String, required: true},
     prcTag: {type: [TagSchema], required: true},
     prcTime: {type: Date, required: false},

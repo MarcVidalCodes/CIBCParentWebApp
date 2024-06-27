@@ -18,7 +18,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/users/getuser', {
+        const response = await fetch('http://localhost:3001/api/user/getuser', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
