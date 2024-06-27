@@ -8,7 +8,11 @@ const Login = () => {
   function handleLogin(event){
     event.preventDefault();
   
-    fetch('/api/testserver')
+    fetch('http://localhost:3001/api/testserver', {
+      headers: {
+        'Accept': 'application/json', // Specify that the client expects JSON
+      }
+    })
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -17,8 +21,8 @@ const Login = () => {
     })
     .then(text => {
       try {
-        const jsonData = JSON.parse(text); // Attempt to parse JSON
-        console.log(jsonData);
+        //const jsonData = JSON.parse(text); // Attempt to parse JSON
+        console.log(text);
         window.alert("API routing worked!!!1");
       } catch (error) {
         console.error("Failed to parse JSON:", error);
