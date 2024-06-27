@@ -50,6 +50,7 @@ const PurchaseSchema = new mongoose.Schema({
     prcName: {type: String, required: false},
     prcApproved: {type: String, required: true},
     prcTag: {type: [TagSchema], required: true},
+    prcTime: {type: Date, required: false},
     acctId: {type: String, required: true},
     debitorId: {type: String, required: true},
     creditorId: {type: String, required: true}
@@ -122,13 +123,17 @@ app.post('/api/users/signup', async (req, res) => {
 
         let number = Math.floor(Math.random() * 100000) + 1;
         while (idNumbers.has(number)) {
-        number = Math.floor(Math.random() * 100000) + 1;
-            }
+            number = Math.floor(Math.random() * 100000) + 1;
+        }
         idNumbers.add(number);
 
         const newUser = new Users({ username: username, password: password, userId: number });
         await newUser.save();
-        res.status(201).json({ message: 'User created successfully', userId: newUser._id });
+
+        // Generate a token (for simplicity, using userId as token)
+        const token = newUser.userId;
+
+        res.status(201).json({ message: 'User created successfully', userId: newUser._id, token });
     } catch (error) {
         console.error('Error during signup:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -141,7 +146,10 @@ app.post('/api/users/signin', async (req, res) => {
         const { username, password } = req.body;
         const user = await Users.findOne({ username, password }); // For simplicity, not using password hashing
         if (user) {
-            res.status(200).json({ message: 'User authenticated successfully', userId: user.userId });
+            // Generate a token (for simplicity, using userId as token)
+            const token = user.userId;
+
+            res.status(200).json({ message: 'User authenticated successfully', userId: user.userId, token });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -184,6 +192,7 @@ app.delete('/api/users/:userId', async (req, res) => {
     }
 });
 
+// get all data from user
 app.get('/api/users/getuser', async (req, res) => {
     try {
         const { username } = req.query;
@@ -279,11 +288,11 @@ app.get('/api/parents/:parentId/children', async (req, res) => {
     }
 });
 
-app.get('/api/user/getBalance', async (req, res) => {
-    try{
-        const {}
-    }
-});
+// app.get('/api/user/getBalance', async (req, res) => {
+//     try{
+//         const {}
+//     }
+// });
 
 // -------------------------------------------
 // 3. -> Fund Management
