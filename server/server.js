@@ -10,7 +10,7 @@ dotenv.config()
 
 import OpenAI from "openai";
 
-const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
+//const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 // connect to mongodb
 // mongoose.connect('mongodb://127.0.0.1:27017/olli');
 // const db = mongoose.connection
@@ -63,7 +63,11 @@ const AccountSchema = new mongoose.Schema({
     acctType: {type: String, required: true},
     acctBal: {type: String, required: true},
     acctLimit: {type: String, required: true},
-    acctPurchases: {type: [Purchases], required: true},
+    acctPurchases: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Purchases',
+        required: true
+    }],
     allowanceAmt: {type: Number, required: false},
     allowanceFreq: {type: Number, required: false},
     allowanceSourceId: {type: Number, required: false},

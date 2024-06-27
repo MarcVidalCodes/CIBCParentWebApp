@@ -40,7 +40,8 @@ const Login = () => {
       if (data.error) {
         window.alert(data.error);
       } else {
-        window.alert(isRegister ? 'Registration successful!' : 'Login successful!');
+        window.alert(isRegister ? `Registration successful! Token: ${data._id}` : `Login successful! Token: ${data._id}`);
+        console.log(`Token: ${data._id}`); // Log the token for debug purposes
         // Store user information in local storage
         localStorage.setItem('userId', data._id);
         navigate('/dashboard'); // Redirect to dashboard
