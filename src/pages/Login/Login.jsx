@@ -5,15 +5,36 @@ import { useState } from 'react';
 import logo from '../../assets/cibclogo2.png'; // Adjust the path based on your project structure
 
 const Login = () => {
-  const [isRegister, setIsRegister] = useState(false);
 
-  const handleRegisterClick = () => {
-    setIsRegister(true);
-  };
 
-  const handleLoginClick = () => {
-    setIsRegister(false);
-  };
+  function handleLogin(event){
+    event.preventDefault();
+  
+    fetch('http://localhost:3001/api/testserver', {
+      headers: {
+        'Accept': 'application/json', // Specify that the client expects JSON
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(text => {
+      try {
+        //const jsonData = JSON.parse(text); // Attempt to parse JSON
+        console.log(text);
+        window.alert("API routing worked!!!1");
+      } catch (error) {
+        console.error("Failed to parse JSON:", error);
+        // Handle the case where response is not JSON
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
 
   return (
     <div className="login-container">
@@ -48,7 +69,7 @@ const Login = () => {
               )}
             </div>
 
-            <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
+            <button type="submit" onClick={handleLogin}>Login</button>
 
             <div className="register-link">
               <p>{isRegister ? 'Already have an account?' : "Don't have an account?"} <a href="#" onClick={isRegister ? handleLoginClick : handleRegisterClick}>{isRegister ? 'Login' : 'Register'}</a></p>
