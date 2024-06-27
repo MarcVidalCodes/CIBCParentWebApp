@@ -37,15 +37,21 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     min-width: 280px; /* Ensure boxes don't get too narrow */
+    font-size: 1.5em; /* Revert text in the boxes back to normal */
   }
   
   .box-title {
     position: relative;
-    font-size: 1.5em;
-    margin-bottom: 5px; /* Reduced space underneath the title */
+    font-size: 1.5em; /* Revert text back to normal */
+    margin-bottom: 2px; /* Reduced space underneath the title */
     text-align: left; /* Align title to the left */
     width: 100%; /* Ensure title takes full width */
     padding-left: 20px; /* Shift title to the right */
+  }
+
+  .large-title {
+    font-size: 2.5em; /* Make the "Hello, Shawn" title bigger */
+    margin-bottom: 20px; /* Add more space below "Hello, Shawn" */
   }
   
   .double-height {
@@ -77,11 +83,11 @@
 
   .scrollable-box {
     overflow-y: auto;
-    max-height: 250px; /* Reduced max-height to make the box smaller */
+    max-height: 500px; /* Increased max-height to make the box bigger */
   }
 
   .activity-box {
-    width: auto; /* Changed from 100% to auto */
+    width: 100%; /* Make it span the entire box */
     margin: 5px 0;
     padding: 10px;
     background-color: #f1f1f1;
@@ -89,7 +95,7 @@
     border-radius: 4px;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-between; /* Align content to the left and right */
+    justify-content: flex-start; /* Align content to the left */
   }
 
   @media (max-width: 1024px) {
@@ -118,12 +124,13 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     min-width: 280px; /* Ensure boxes don't get too narrow */
+    font-size: 1.5em; /* Revert text in the boxes back to normal */
   }
 
   .child-account-title {
     position: relative;
-    font-size: 1.2em;
-    margin-bottom: 5px; /* Reduced space underneath the title */
+    font-size: 1.5em; /* Revert text back to normal */
+    margin-bottom: 2px; /* Reduced space underneath the title */
     text-align: left; /* Align title to the left */
     width: 100%; /* Ensure title takes full width */
     padding-left: 20px; /* Shift title to the right */

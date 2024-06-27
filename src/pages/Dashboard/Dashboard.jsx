@@ -7,13 +7,14 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+      <h1 className="box-title large-title hello-shawn">Hello, Shawn</h1>
       <div className="dashboard-row">
         <div className="dashboard-column">
-          <h3 className="box-title">Balance</h3>
-          <div className="box double-height">
+          <h3 className="box-title">Account Balance</h3>
+          <div className="box double-height" style={{ fontSize: '4em' }}>
             <p>${balance.toFixed(2)}</p>
           </div>
-          <h3 className="box-title">Quick Look at Child Accounts</h3>
+          <h3 className="box-title">Child Account Balances</h3>
           <div className="box double-height">
             <ul>
               {childAccounts.map((account, index) => (
@@ -24,7 +25,7 @@ const Dashboard = () => {
         </div>
         <div className="dashboard-column">
           <h3 className="box-title">AI Insights</h3>
-          <div className="box single-height">
+          <div className="box double-height">
             <p>AI analysis of spending patterns.</p>
           </div>
         </div>
@@ -32,10 +33,10 @@ const Dashboard = () => {
       <div className="dashboard-row">
         <div className="dashboard-column full-width">
           <h3 className="box-title">Account Activity</h3>
-          <div className="box scrollable-box">
+          <div className="box scrollable-box" style={{ height: '400px', textAlign: 'left' }}>
             <ul>
               {accountActivity.map((activity, index) => (
-                <li key={index} className="activity-box">
+                <li key={index} className="activity-box" >
                   User: {activity.user} | Date: {activity.date} | Amount: ${activity.amount.toFixed(2)}
                 </li>
               ))}
