@@ -1,46 +1,53 @@
 .parental-controls-container {
-    margin: 20px auto;
-    padding: 30px; /* Increased padding */
+    margin: 20px;
+    padding: 20px;
     border-radius: 10px;
     width: 90%;
     max-width: 1200px;
     background-color: #f0f0f0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center; /* Center align text */
+    padding: 20px; /* Added padding */
 }
 
 .parental-controls-title {
-    font-size: 36px; /* Increased font size */
+    font-size: 32px;
     color: #222;
-    margin-bottom: 25px; /* Increased margin */
+    margin-bottom: 20px;
     text-align: center;
     font-weight: bold;
+    padding: 10px; /* Added padding */
 }
 
 .parental-controls-section {
-    margin-bottom: 30px; /* Increased margin */
-    padding: 25px; /* Increased padding */
+    margin-bottom: 25px;
+    padding: 20px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    text-align: left; /* Align text to the left */
+    padding: 20px; /* Added padding */
 }
 
 .section-title {
-    font-size: 28px; /* Increased font size */
+    font-size: 24px;
     color: #444;
-    margin-bottom: 20px; /* Increased margin */
+    margin-bottom: 15px;
     font-weight: bold;
-    text-align: center; /* Center align text */
+    padding: 10px; /* Added padding */
 }
 
 .switch {
     position: relative;
     display: inline-block;
-    width: 70px; /* Increased width */
-    height: 40px; /* Increased height */
-    margin-left: 20px; /* Added margin to separate from title */
-    text-align: center; /* Center align slider */
+    width: 60px;
+    height: 34px;
+    padding: 5px; /* Added padding */
+    margin-left: 20px; /* Added margin to move away from the left wall */
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .slider {
@@ -52,26 +59,23 @@
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 40px; /* Adjusted border-radius */
+    border-radius: 34px;
 }
 
 .slider.round {
-    border-radius: 40px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
+    border-radius: 34px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 30px; /* Increased height */
-    width: 30px; /* Increased width */
-    left: 5px; /* Adjusted position */
-    bottom: 5px; /* Adjusted position */
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
     background-color: white;
     transition: .4s;
+    border-radius: 50%;
 }
 
 input:checked + .slider {
@@ -79,7 +83,7 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(30px); /* Adjusted transform */
+    transform: translateX(26px);
 }
 
 input:focus + .slider {
@@ -90,17 +94,12 @@ input[type="number"] {
     height: auto;
     width: 60%;
     -moz-appearance: textfield;
-    padding: 15px; /* Increased padding */
-    font-size: 18px; /* Increased font size */
+    padding: 10px;
+    font-size: 16px;
     border: 1px solid #bbb;
     border-radius: 5px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
     margin-left: 15px; 
-    text-align: center; /* Center align text inside the textbox */
-}
-
-input[type="number"]::placeholder {
-    text-align: center; /* Center align placeholder text */
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -116,21 +115,22 @@ input[type="number"]:focus {
 }
 
 .input-group {
-    margin-bottom: 25px; /* Increased margin */
-    text-align: center; /* Center align text */
+    margin-bottom: 20px;
+    padding: 10px; /* Added padding */
 }
 
 .input-group label {
-    font-size: 18px; /* Increased font size */
+    font-size: 16px;
     color: #444;
-    display: inline-block; /* Changed to inline-block */
-    margin-right: 10px; /* Added margin to separate from input */
+    display: block;
+    margin-bottom: 6px;
+    padding: 5px; /* Added padding */
 }
 
 .input-field {
     width: calc(100% - 20px);
-    padding: 15px; /* Increased padding */
-    font-size: 18px; /* Increased font size */
+    padding: 10px;
+    font-size: 16px;
     border: 1px solid #bbb;
     border-radius: 5px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
@@ -141,11 +141,5 @@ input[type="number"]:focus {
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 3px #4CAF50;
-}
-
-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+    padding: 10px; /* Added padding */
 }
