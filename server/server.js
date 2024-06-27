@@ -5,9 +5,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 const idNumbers = new Set();
 import dotenv from 'dotenv'
+dotenv.config() // Load environment variables from .env file
 import crypto from 'crypto';
-
-dotenv.config()
+import jwt from 'jsonwebtoken';
 
 import OpenAI from "openai";
 
@@ -133,8 +133,12 @@ app.post('/api/users/signup', async (req, res) => {
         const newUser = new Users({ username: username, password: password, userId: number });
         await newUser.save();
 
-        // Generate a simple token using userId and a timestamp
-        const token = crypto.createHash('sha256').update(newUser._id.toString() + Date.now().toString()).digest('hex');
+        // Generate a JWT token
+        const token = jwt.sign(
+            { userId: newUser._id, username: newUser.username },
+            process.env.JWT_SECRET_KEY, // Ensure this matches your .env key
+            { expiresIn: '1h' }
+        );
         console.log('Generated Token:', token); // Log the token
 
         res.status(201).json({ message: 'User created successfully', userId: newUser._id, token });
@@ -150,8 +154,12 @@ app.post('/api/users/signin', async (req, res) => {
         const { username, password } = req.body;
         const user = await Users.findOne({ username, password });
         if (user) {
-            // Generate a simple token using userId and a timestamp
-            const token = crypto.createHash('sha256').update(user._id.toString() + Date.now().toString()).digest('hex');
+            // Generate a JWT token
+            const token = jwt.sign(
+                { userId: user._id, username: user.username },
+                process.env.JWT_SECRET_KEY, // Ensure this matches your .env key
+                { expiresIn: '1h' }
+            );
             console.log('Generated Token:', token); // Log the token
 
             res.status(200).json({ message: 'User authenticated successfully', userId: user._id, token });
@@ -200,8 +208,16 @@ app.delete('/api/users/:userId', async (req, res) => {
 // get all data from user
 app.get('/api/users/getuser', async (req, res) => {
     try {
-        const { username } = req.query;
-        const user = await Users.findOne({ username }).populate({
+        console.log("hello");
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        console.log("token is: " + token);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        console.log(decoded);
+        const user = await Users.findById(decoded.userId).populate({
             path: 'accounts',
             populate: {
                 path: 'acctPurchases',
@@ -212,6 +228,7 @@ app.get('/api/users/getuser', async (req, res) => {
                 }
             }
         });
+
         if (user) {
             return res.status(200).json({
                 userId: user.userId,
@@ -245,6 +262,7 @@ app.get('/api/users/getuser', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
     } catch (error) {
+        console.log("hello2");
         console.error('Error fetching user:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -432,6 +450,24 @@ app.post('/api/controls/:childId/freeze', async (req, res) => {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+});
+
+app.get('/api/users/data', async (req, res) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await Users.findById(decoded.userId).select('balance childAccounts accountActivity username');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user data' });
+  }
 });
 
 app.listen(PORT, () => {
