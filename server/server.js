@@ -3,7 +3,14 @@ const app = express();
 const PORT = 3001;
 import mongoose from 'mongoose';
 import cors from 'cors';
+const idNumbers = new Set();
+import dotenv from 'dotenv'
 
+dotenv.config()
+
+import OpenAI from "openai";
+
+const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 // connect to mongodb
 // mongoose.connect('mongodb://127.0.0.1:27017/olli');
 // const db = mongoose.connection
@@ -30,13 +37,32 @@ db.once('open', () => {
 
 // schemas for MongoDB
 
+const TagSchema = new mongoose.Schema({
+    tagId: {type: String, required: true},
+    tagName: {type: String, required: true}
+});
+
+const Tags = mongoose.model('Tags', TagSchema);
+
+
+const PurchaseSchema = new mongoose.Schema({
+    prcId: {type: String, required: true},
+    prcName: {type: String, required: false},
+    prcApproved: {type: String, required: true},
+    prcTag: {type: [TagSchema], required: true},
+    acctId: {type: String, required: true},
+    debitorId: {type: String, required: true},
+    creditorId: {type: String, required: true}
+});
+    
+const Purchases = mongoose.model('Purchases', PurchaseSchema);
 
 const AccountSchema = new mongoose.Schema({
     acctId: {type: String, required: true},
     acctType: {type: String, required: true},
     acctBal: {type: String, required: true},
     acctLimit: {type: String, required: true},
-    acctPurchases: {type: String, required: true},
+    acctPurchases: {type: [Purchases], required: true},
     allowanceAmt: {type: Number, required: false},
     allowanceFreq: {type: Number, required: false},
     allowanceSourceId: {type: Number, required: false},
@@ -45,6 +71,7 @@ const AccountSchema = new mongoose.Schema({
 const Accounts = mongoose.model('Accounts', AccountSchema);
 
 const UserSchema = new mongoose.Schema({
+    userId: {type: String, required: true},
     username: {type: String, required: true},
     password: {type: String, required: true},
     accounts: {type: [AccountSchema], required: false},
@@ -53,18 +80,7 @@ const UserSchema = new mongoose.Schema({
 });
 const Users = mongoose.model('Users', UserSchema);
 
-const PurchaseSchema = new mongoose.Schema({
-    prcId: {type: String, required: true},
-    prcName: {type: String, required: false},
-    prcApproved: {type: String, required: true},
-    prcTag: {type: String, required: true},
-    // prcTag: {type: [TagSchema], required: true},
-    acctId: {type: String, required: true},
-    debitorId: {type: String, required: true},
-    creditorId: {type: String, required: true}
-});
-    
-const Purchases = mongoose.model('Purchases', PurchaseSchema);
+
 
 // middleware for logging for all routes
 app.use((req, res, next) => {
@@ -104,7 +120,13 @@ app.post('/api/users/signup', async (req, res) => {
             return res.status(400).json({ error: 'User already exists' });
         }
 
-        const newUser = new Users({ username, password });
+        let number = Math.floor(Math.random() * 100000) + 1;
+        while (idNumbers.has(number)) {
+        number = Math.floor(Math.random() * 100000) + 1;
+            }
+        idNumbers.add(number);
+
+        const newUser = new Users({ username: username, password: password, userId: number });
         await newUser.save();
         res.status(201).json({ message: 'User created successfully', userId: newUser._id });
     } catch (error) {
@@ -119,7 +141,7 @@ app.post('/api/users/signin', async (req, res) => {
         const { username, password } = req.body;
         const user = await Users.findOne({ username, password }); // For simplicity, not using password hashing
         if (user) {
-            res.status(200).json({ message: 'User authenticated successfully', userId: user._id });
+            res.status(200).json({ message: 'User authenticated successfully', userId: user.userId });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -158,6 +180,58 @@ app.delete('/api/users/:userId', async (req, res) => {
         }
     } catch (error) {
         console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/users/getuser', async (req, res) => {
+    try {
+        const { username } = req.query;
+        const user = await Users.findOne({ username }).populate({
+            path: 'accounts',
+            populate: {
+                path: 'acctPurchases',
+                model: 'Purchases',
+                populate: {
+                    path: 'prcTag',
+                    model: 'Tags'
+                }
+            }
+        });
+        if (user) {
+            return res.status(200).json({
+                userId: user.userId,
+                username: user.username,
+                accounts: user.accounts.map(account => ({
+                    acctId: account.acctId,
+                    acctType: account.acctType,
+                    acctBal: account.acctBal,
+                    acctLimit: account.acctLimit,
+                    acctPurchases: account.acctPurchases.map(purchase => ({
+                        prcId: purchase.prcId,
+                        prcName: purchase.prcName,
+                        prcApproved: purchase.prcApproved,
+                        prcTag: purchase.prcTag.map(tag => ({
+                            tagId: tag.tagId,
+                            tagName: tag.tagName
+                        })),
+                        acctId: purchase.acctId,
+                        debitorId: purchase.debitorId,
+                        creditorId: purchase.creditorId
+                    })),
+                    allowanceAmt: account.allowanceAmt,
+                    allowanceFreq: account.allowanceFreq,
+                    allowanceSourceId: account.allowanceSourceId,
+                    acctFrozen: account.acctFrozen
+                })),
+                name: user.name
+            });
+        } else {
+            // 404 not found
+            return res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching user:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -202,6 +276,12 @@ app.get('/api/parents/:parentId/children', async (req, res) => {
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/user/getBalance', async (req, res) => {
+    try{
+        const {}
     }
 });
 

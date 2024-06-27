@@ -20,7 +20,7 @@ const Login = () => {
     }
 
     const url = isRegister ? 'http://localhost:3001/api/users/signup' : 'http://localhost:3001/api/users/signin';
-    const payload = isRegister ? { username, password, confirmPassword } : { username, password };
+    const payload = {username, password, confirmPassword};
 
     fetch(url, {
       method: 'POST',
@@ -55,6 +55,9 @@ const Login = () => {
   function handleRegisterClick(event) {
     event.preventDefault();
     setIsRegister(true);
+
+    
+
   }
 
   function handleLoginClick(event) {
