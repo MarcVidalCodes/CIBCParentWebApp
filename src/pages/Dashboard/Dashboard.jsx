@@ -1,39 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Dashboard.css';
-import axios from 'axios';
-
-// Custom hook to fetch user data by username
-const useUserData = (username) => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (!username) return;
-
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`/api/users/getuser`, { params: { username } });
-        setUserData(response.data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [username]);
-
-  return { userData, loading, error };
-};
+import useFetchWithToken from '../../hooks/useFetchWithToken';
 
 const Dashboard = () => {
-  const username = 'some-username'; // Replace with actual username
-  const { userData, loading, error } = useUserData(username);
+  const { data: userData, loading, error } = useFetchWithToken('/api/users/data');
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading user data</p>;
+  if (error) return <p>Error loading user data: {error.message}</p>;
 
   const { balance, childAccounts, accountActivity } = userData;
 
@@ -80,3 +53,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
