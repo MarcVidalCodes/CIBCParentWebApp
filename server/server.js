@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 const idNumbers = new Set();
 import dotenv from 'dotenv'
+import crypto from 'crypto';
 
 dotenv.config()
 
@@ -64,10 +65,10 @@ const AccountSchema = new mongoose.Schema({
     acctBal: {type: String, required: true},
     acctLimit: {type: String, required: true},
     acctPurchases: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Purchases',
-        required: true
-    }],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Purchases',
+    required: true
+}],
     allowanceAmt: {type: Number, required: false},
     allowanceFreq: {type: Number, required: false},
     allowanceSourceId: {type: Number, required: false},
@@ -81,7 +82,6 @@ const UserSchema = new mongoose.Schema({
     password: {type: String, required: true},
     accounts: {type: [AccountSchema], required: false},
     name: {type: String, required: false},
-
 });
 const Users = mongoose.model('Users', UserSchema);
 
@@ -119,7 +119,6 @@ app.post('/api/users/signup', async (req, res) => {
             return res.status(400).json({ error: 'Passwords do not match' });
         }
 
-        // Check if the user already exists
         const existingUser = await Users.findOne({ username });
         if (existingUser) {
             return res.status(400).json({ error: 'User already exists' });
@@ -134,8 +133,9 @@ app.post('/api/users/signup', async (req, res) => {
         const newUser = new Users({ username: username, password: password, userId: number });
         await newUser.save();
 
-        // Generate a token (for simplicity, using userId as token)
-        const token = newUser.userId;
+        // Generate a simple token using userId and a timestamp
+        const token = crypto.createHash('sha256').update(newUser._id.toString() + Date.now().toString()).digest('hex');
+        console.log('Generated Token:', token); // Log the token
 
         res.status(201).json({ message: 'User created successfully', userId: newUser._id, token });
     } catch (error) {
@@ -148,12 +148,13 @@ app.post('/api/users/signup', async (req, res) => {
 app.post('/api/users/signin', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = await Users.findOne({ username, password }); // For simplicity, not using password hashing
+        const user = await Users.findOne({ username, password });
         if (user) {
-            // Generate a token (for simplicity, using userId as token)
-            const token = user.userId;
+            // Generate a simple token using userId and a timestamp
+            const token = crypto.createHash('sha256').update(user._id.toString() + Date.now().toString()).digest('hex');
+            console.log('Generated Token:', token); // Log the token
 
-            res.status(200).json({ message: 'User authenticated successfully', userId: user.userId, token });
+            res.status(200).json({ message: 'User authenticated successfully', userId: user._id, token });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }
