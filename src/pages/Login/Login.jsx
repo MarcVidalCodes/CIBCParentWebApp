@@ -2,10 +2,12 @@ import React from 'react';
 import './Login.css';
 import { FaUser, FaLock } from "react-icons/fa";
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/cibclogo2.png'; // Adjust the path based on your project structure
 
 const Login = () => {
   const [isRegister, setIsRegister] = useState(false);
+  const navigate = useNavigate();
 
   const handleRegisterClick = () => {
     setIsRegister(true);
@@ -15,26 +17,31 @@ const Login = () => {
     setIsRegister(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/dashboard');
+  };
+
   return (
     <div className="login-container">
       <div className="left-box">
         <div className='wrapper'>
-          <form action ="">
+          <form onSubmit={handleSubmit}>
             <img src={logo} alt="Company Logo" className="logo" />
             <h1>{isRegister ? 'Register' : 'Login'}</h1>
             <h1 className="title">Parent Portal</h1>
             <div className="input-box">
-              <input type="text" placeholder='Username' required />
+              <input type="text" placeholder='Username' />
               <FaUser className='icon' />
             </div>
             <div className="input-box">
-              <input type="password" placeholder='Password' required />
+              <input type="password" placeholder='Password' />
               <FaLock className='icon'/>
             </div>
 
             {isRegister && (
               <div className="input-box">
-                <input type="password" placeholder='Confirm Password' required />
+                <input type="password" placeholder='Confirm Password' />
                 <FaLock className='icon'/>
               </div>
             )}

@@ -4,7 +4,9 @@ import './LoadFunds.css';
 const LoadFunds = () => {
   const [balance, setBalance] = useState(13000.00);
   const [childAccounts, setChildAccounts] = useState([
-    { name: 'Tiago', balance: 150.00 }
+    { name: 'Tiago', balance: 150.00 },
+    { name: 'Marc', balance: 200.00 },
+    { name: 'Shawn', balance: 300.00 }
   ]);
   const [accountActivity, setAccountActivity] = useState([
     { user: 'Tiago', activity: 'Load Funds', amount: 75.00, currency: 'USD', date: '2022-01-02' }
