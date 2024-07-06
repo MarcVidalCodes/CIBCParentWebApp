@@ -1,9 +1,3 @@
-# React + Vite
+A project created for MBA students at Western University, Ivey School of Business to present in a consulting competition. 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# CIBCParentWebApp
+Completed front end on main branch. Backend is currently still being worked on in the "fullstack1" branch. 
