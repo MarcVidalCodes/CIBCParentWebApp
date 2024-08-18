@@ -1,17 +1,11 @@
 import express from 'express';
-const app = express();
-const PORT = 3001;
 import mongoose from 'mongoose';
 import cors from 'cors';
-const idNumbers = new Set();
-import dotenv from 'dotenv'
-dotenv.config() // Load environment variables from .env file
-import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
-import OpenAI from "openai";
+const app = express();
+const PORT = 3001;
 
-//const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 // connect to mongodb
 // mongoose.connect('mongodb://127.0.0.1:27017/olli');
 // const db = mongoose.connection
@@ -35,41 +29,15 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-
 // schemas for MongoDB
 
-const TagSchema = new mongoose.Schema({
-    tagId: {type: String, required: true},
-    tagName: {type: String, required: true}
-});
-
-const Tags = mongoose.model('Tags', TagSchema);
-
-
-const PurchaseSchema = new mongoose.Schema({
-    prcId: {type: String, required: true},
-    prcName: {type: String, required: false},
-    prcAmt: {type: Number, required:true},
-    prcApproved: {type: String, required: true},
-    prcTag: {type: [TagSchema], required: true},
-    prcTime: {type: Date, required: false},
-    acctId: {type: String, required: true},
-    debitorId: {type: String, required: true},
-    creditorId: {type: String, required: true}
-});
-    
-const Purchases = mongoose.model('Purchases', PurchaseSchema);
 
 const AccountSchema = new mongoose.Schema({
     acctId: {type: String, required: true},
     acctType: {type: String, required: true},
     acctBal: {type: String, required: true},
     acctLimit: {type: String, required: true},
-    acctPurchases: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Purchases',
-    required: true
-}],
+    acctPurchases: {type: String, required: true},
     allowanceAmt: {type: Number, required: false},
     allowanceFreq: {type: Number, required: false},
     allowanceSourceId: {type: Number, required: false},
@@ -79,14 +47,26 @@ const Accounts = mongoose.model('Accounts', AccountSchema);
 
 const UserSchema = new mongoose.Schema({
     userId: {type: String, required: true},
+    accounts: {type: [AccountSchema], required: false},
     username: {type: String, required: true},
     password: {type: String, required: true},
-    accounts: {type: [AccountSchema], required: false},
     name: {type: String, required: false},
+
 });
 const Users = mongoose.model('Users', UserSchema);
 
-
+const PurchaseSchema = new mongoose.Schema({
+    prcId: {type: String, required: true},
+    prcName: {type: String, required: false},
+    prcApproved: {type: String, required: true},
+    prcTag: {type: String, required: true},
+    // prcTag: {type: [TagSchema], required: true},
+    acctId: {type: String, required: true},
+    debitorId: {type: String, required: true},
+    creditorId: {type: String, required: true}
+});
+    
+const Purchases = mongoose.model('Purchases', PurchaseSchema);
 
 // middleware for logging for all routes
 app.use((req, res, next) => {
@@ -108,6 +88,8 @@ app.get('/api/testServer', async (req, res) => {
 
 });
 
+
+
 // -------------------------------------------
 // 1. -> User Registration and Authentication
 // -------------------------------------------
@@ -115,36 +97,16 @@ app.get('/api/testServer', async (req, res) => {
 // Create User (Sign Up)
 app.post('/api/users/signup', async (req, res) => {
     try {
-        const { username, password, confirmPassword } = req.body;
-        if (password !== confirmPassword) {
-            return res.status(400).json({ error: 'Passwords do not match' });
-        }
-
-        const existingUser = await Users.findOne({ username });
-        if (existingUser) {
-            return res.status(400).json({ error: 'User already exists' });
-        }
-
-        let number = Math.floor(Math.random() * 100000) + 1;
-        while (idNumbers.has(number)) {
-            number = Math.floor(Math.random() * 100000) + 1;
-        }
-        idNumbers.add(number);
-
-        const newUser = new Users({ username: username, password: password, userId: number });
+        const { username, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+        const newUser = new Users({
+            ...req.body,
+            password: hashedPassword // Save the hashed password
+        });
         await newUser.save();
-
-        // Generate a JWT token
-        const token = jwt.sign(
-            { userId: newUser._id, username: newUser.username },
-            process.env.JWT_SECRET_KEY, // Ensure this matches your .env key
-            { expiresIn: '1h' }
-        );
-        console.log('Generated Token:', token); // Log the token
-
-        res.status(201).json({ message: 'User created successfully', userId: newUser._id, token });
+        res.status(201).json({ message: 'User created successfully', userId: newUser._id });
     } catch (error) {
-        console.error('Error during signup:', error);
+        console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -153,42 +115,21 @@ app.post('/api/users/signup', async (req, res) => {
 app.post('/api/users/signin', async (req, res) => {
     try {
         const { username, password } = req.body;
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Username and password are required' });
+        }
         const user = await Users.findOne({ username, password });
         if (user) {
-            // Generate a JWT token
-            const token = jwt.sign(
-                { userId: user._id, username: user.username },
-                process.env.JWT_SECRET_KEY, // Ensure this matches your .env key
-                { expiresIn: '1h' }
-            );
-            console.log('Generated Token:', token); // Log the token
-
-            res.status(200).json({ message: 'User authenticated successfully', userId: user._id, token });
+            res.status(200).json({ message: 'User authenticated successfully', userId: user._id });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }
     } catch (error) {
-        console.error('Error during signin:', error);
+        console.error('Error in /api/users/signin:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-// Update (Change Password)
-app.put('/api/users/:userId/password', async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { newPassword } = req.body;
-        const updatedUser = await Users.findByIdAndUpdate(userId, { password: newPassword }, { new: true });
-        if (updatedUser) {
-            res.status(200).json({ message: 'Password updated successfully' });
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
 
 // Delete (Remove User)
 app.delete('/api/users/:userId', async (req, res) => {
@@ -206,74 +147,12 @@ app.delete('/api/users/:userId', async (req, res) => {
     }
 });
 
-// get all data from user
-app.get('/api/users/getuser', async (req, res) => {
-    try {
-        console.log("hello");
-        const token = req.headers['authorization']?.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ message: 'No token provided' });
-        }
-
-        console.log("token is: " + token);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        console.log(decoded);
-        const user = await Users.findById(decoded.userId).populate({
-            path: 'accounts',
-            populate: {
-                path: 'acctPurchases',
-                model: 'Purchases',
-                populate: {
-                    path: 'prcTag',
-                    model: 'Tags'
-                }
-            }
-        });
-
-        if (user) {
-            return res.status(200).json({
-                userId: user.userId,
-                username: user.username,
-                accounts: user.accounts.map(account => ({
-                    acctId: account.acctId,
-                    acctType: account.acctType,
-                    acctBal: account.acctBal,
-                    acctLimit: account.acctLimit,
-                    acctPurchases: account.acctPurchases.map(purchase => ({
-                        prcId: purchase.prcId,
-                        prcName: purchase.prcName,
-                        prcApproved: purchase.prcApproved,
-                        prcTag: purchase.prcTag.map(tag => ({
-                            tagId: tag.tagId,
-                            tagName: tag.tagName
-                        })),
-                        acctId: purchase.acctId,
-                        debitorId: purchase.debitorId,
-                        creditorId: purchase.creditorId
-                    })),
-                    allowanceAmt: account.allowanceAmt,
-                    allowanceFreq: account.allowanceFreq,
-                    allowanceSourceId: account.allowanceSourceId,
-                    acctFrozen: account.acctFrozen
-                })),
-                name: user.name
-            });
-        } else {
-            // 404 not found
-            return res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        console.log("hello2");
-        console.error('Error fetching user:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
 
 // -------------------------------------------
 // 2. -> Dashboard
 // -------------------------------------------
 
-// Link a new child account to the parent's main account
+// Link a new child account to the parent’s main account
 app.post('/api/parents/:parentId/children', async (req, res) => {
     try {
         const { parentId } = req.params;
@@ -311,12 +190,6 @@ app.get('/api/parents/:parentId/children', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-// app.get('/api/user/getBalance', async (req, res) => {
-//     try{
-//         const {}
-//     }
-// });
 
 // -------------------------------------------
 // 3. -> Fund Management
@@ -451,24 +324,6 @@ app.post('/api/controls/:childId/freeze', async (req, res) => {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-});
-
-app.get('/api/users/data', async (req, res) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const user = await Users.findById(decoded.userId).select('balance childAccounts accountActivity username');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching user data' });
-  }
 });
 
 app.listen(PORT, () => {
