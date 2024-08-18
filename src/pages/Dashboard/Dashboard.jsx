@@ -1,44 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const balance = 13402.33;
-  const childAccounts = [
-    { name: 'Marc', balance: 185.00 },
-    { name: 'Shawn', balance: 150.00 },
-    { name: 'Tiago', balance: 432.00 }
-  ];
-  const accountActivity = [
-    { user: 'Marc', activity: 'Load Funds', amount: 50.00, date: '2022-01-01', category: 'Other' },
-    { user: 'Shawn', activity: 'Load Funds', amount: 75.00, date: '2022-01-02', category: 'Other' },
-    { user: 'Tiago', activity: 'Load Funds', amount: 100.00, date: '2022-01-03', category: 'Other' },
-    { user: 'Marc', activity: 'Purchase', amount: 20.00, date: '2022-01-04', category: 'Electronics' },
-    { user: 'Shawn', activity: 'Purchase', amount: 30.00, date: '2022-01-05', category: 'Food' },
-    { user: 'Tiago', activity: 'Purchase', amount: 40.00, date: '2022-01-06', category: 'Fashion' },
-    { user: 'Marc', activity: 'Load Funds', amount: 60.00, date: '2022-01-07', category: 'Other' },
-    { user: 'Shawn', activity: 'Load Funds', amount: 80.00, date: '2022-01-08', category: 'Other' },
-    { user: 'Tiago', activity: 'Load Funds', amount: 90.00, date: '2022-01-09', category: 'Other' },
-    { user: 'Marc', activity: 'Purchase', amount: 25.00, date: '2022-01-10', category: 'Rent' },
-    { user: 'Shawn', activity: 'Purchase', amount: 35.00, date: '2022-01-11', category: 'Utilities' },
-    { user: 'Tiago', activity: 'Purchase', amount: 45.00, date: '2022-01-12', category: 'Subscriptions' },
-    { user: 'Marc', activity: 'Load Funds', amount: 70.00, date: '2022-01-13', category: 'Other' },
-    { user: 'Shawn', activity: 'Load Funds', amount: 85.00, date: '2022-01-14', category: 'Other' },
-    { user: 'Tiago', activity: 'Load Funds', amount: 95.00, date: '2022-01-15', category: 'Other' }
-  ];
+  const [token, setToken] = useState('');
+  const [userData, setUserData] = useState({
+    balance: 1234.56,
+    childAccounts: [
+      { name: 'Child Account 1', balance: 234.56 },
+      { name: 'Child Account 2', balance: 345.67 }
+    ],
+    accountActivity: [
+      { user: 'User1', date: '2023-10-01', amount: 45.67 },
+      { user: 'User2', date: '2023-10-02', amount: 78.90 }
+    ]
+  });
 
-  // Sort accountActivity by date
-  accountActivity.sort((a, b) => new Date(a.date) - new Date(b.date));
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/user/getuser', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming the token is stored in localStorage
+          }
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+
+        if (response.status === 304) {
+          console.log('Using cached token');
+          setToken(localStorage.getItem('jwtToken'));
+          return;
+        }
+
+        if (response.ok) {
+          const contentType = response.headers.get('Content-Type');
+          if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+            setToken(data.token);
+            console.log('Token in Dashboard:', data.token); // Debugging token value
+          } else {
+            console.error('Expected JSON response but got:', contentType);
+            const text = await response.text();
+            console.error('Response text:', text);
+          }
+        } else {
+          console.error('Failed to fetch token:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
+  const { balance, childAccounts, accountActivity } = userData;
 
   return (
     <div className="dashboard-container">
-      <h1 className="box-title large-title hello-shawn">Hello, Luke</h1>
+      <h2>Hello, {token}</h2> {/* Displaying the raw JWT token */}
       <div className="dashboard-row">
         <div className="dashboard-column">
-          <h3 className="box-title">Account Balance</h3>
-          <div className="box double-height" style={{ fontSize: '4em' }}>
+          <h3 className="box-title">Balance</h3>
+          <div className="box double-height">
             <p>${balance.toFixed(2)}</p>
           </div>
-          <h3 className="box-title">Child Account Balances</h3>
+          <h3 className="box-title">Quick Look at Child Accounts</h3>
           <div className="box double-height">
             <ul>
               {childAccounts.map((account, index) => (
@@ -49,37 +79,22 @@ const Dashboard = () => {
         </div>
         <div className="dashboard-column">
           <h3 className="box-title">AI Insights</h3>
-          <div className="box double-height">
-            <p>CIBC AI suggests Marc can save $15 monthly by reducing video game spending by 20%. Shawn could save $25 each month by packing lunch. Tiago can save $10 monthly by cutting back on snacks.</p>
+          <div className="box single-height">
+            <p>AI analysis of spending patterns.</p>
           </div>
         </div>
       </div>
       <div className="dashboard-row">
         <div className="dashboard-column full-width">
           <h3 className="box-title">Account Activity</h3>
-          <div className="box scrollable-box" style={{ height: '400px', textAlign: 'left' }}>
-            <table className="activity-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>User</th>
-                  <th>Activity</th>
-                  <th>Amount</th>
-                  <th>Category</th>
-                </tr>
-              </thead>
-              <tbody>
-                {accountActivity.map((activity, index) => (
-                  <tr key={index}>
-                    <td>{activity.date}</td>
-                    <td>{activity.user}</td>
-                    <td>{activity.activity}</td>
-                    <td>${activity.amount.toFixed(2)}</td>
-                    <td>{activity.category}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="box scrollable-box">
+            <ul>
+              {accountActivity.map((activity, index) => (
+                <li key={index} className="activity-box">
+                  User: {activity.user} | Date: {activity.date} | Amount: ${activity.amount.toFixed(2)}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
